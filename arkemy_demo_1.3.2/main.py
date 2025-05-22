@@ -35,12 +35,8 @@ if 'data_loading_attempted' not in st.session_state:
     st.session_state.data_loading_attempted = False
 
 def find_parquet_file():
-    """Find the first Parquet file in /data directory"""
-    data_dir = "data"
-    if not os.path.exists(data_dir):
-        return None
-    
-    parquet_files = glob.glob(os.path.join(data_dir, "*.parquet")) + glob.glob(os.path.join(data_dir, "*.pq"))
+    """Find the first Parquet file in project root"""
+    parquet_files = glob.glob("*.parquet") + glob.glob("*.pq")
     return parquet_files[0] if parquet_files else None
 
 def is_data_loaded():
@@ -52,16 +48,19 @@ def is_data_loaded():
     )
 
 def auto_load_data():
-    """Automatically load data from /data directory on first run"""
+    """Automatically load data from project root on first run"""
     if st.session_state.data_loading_attempted:
         return
     
     st.session_state.data_loading_attempted = True
     
+    # Debug: show what files exist
+    st.write(f"Files in root: {os.listdir('.')}")
+    
     # Find parquet file
     parquet_path = find_parquet_file()
     if not parquet_path:
-        st.error("No Parquet files found in /data directory. Please add a .parquet or .pq file.")
+        st.error("No Parquet files found in project root. Please add a .parquet or .pq file.")
         return
     
     # Show loading message
@@ -99,7 +98,7 @@ if __name__ == "__main__":
         if not is_data_loaded():
             st.title('Arkemy: Turn Your Project Data Into Gold 🥇')
             st.markdown("##### v1.3.1 Parquet")
-            st.error("Unable to load data. Please check that a valid Parquet file exists in the /data directory.")
+            st.error("Unable to load data. Please check that a valid Parquet file exists in the project root.")
     else:
         # Render the dashboard with data
         render_dashboard()
