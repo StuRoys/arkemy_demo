@@ -130,11 +130,9 @@ def process_parquet_data_from_path(parquet_path):
         if currency:
             st.session_state.currency = currency
             st.session_state.currency_selected = True
-            st.success(f"Currency detected from filename: {currency.upper()}")
         else:
             st.session_state.currency = 'nok'  # fallback
             st.session_state.currency_selected = True
-            st.info("No currency in filename, using NOK as default")
         
         # Validate file exists
         if not os.path.exists(parquet_path):
@@ -159,8 +157,6 @@ def process_parquet_data_from_path(parquet_path):
         if main_data.empty:
             st.error("No main project data found in the Parquet file.")
             return
-        
-        st.success(f"Loaded main data with {main_data.shape[0]} rows and {main_data.shape[1]} columns.")
         
         # Validate main data schema
         validation_results = validate_csv_schema(main_data)
