@@ -47,6 +47,19 @@ def is_data_loaded():
         not getattr(st.session_state.transformed_df, 'empty', True)
     )
 
+def show_loading_screen():
+    """Show a clean loading screen"""
+    st.markdown("""
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 70vh;">
+        <h1>🥇 Arkemy</h1>
+        <h3>Turning Your Project Data Into Gold</h3>
+        <div style="margin: 40px 0;">
+            <div class="stSpinner">Loading your data...</div>
+        </div>
+        <p style="color: #666;">Please wait while we process your project data</p>
+    </div>
+    """, unsafe_allow_html=True)
+
 def auto_load_data():
     """Automatically load data from project root on first run"""
     if st.session_state.data_loading_attempted:
@@ -54,20 +67,16 @@ def auto_load_data():
     
     st.session_state.data_loading_attempted = True
     
-    # Debug: show what files exist
-    st.write(f"Files in root: {os.listdir('.')}")
-    
     # Find parquet file
     parquet_path = find_parquet_file()
     if not parquet_path:
         st.error("No Parquet files found in project root. Please add a .parquet or .pq file.")
         return
     
-    # Show loading message
-    with st.spinner(f"Loading data from {os.path.basename(parquet_path)}..."):
+    # Process the parquet file (suppress output with empty container)
+    with st.empty():
         try:
             process_parquet_data_from_path(parquet_path)
-            st.success(f"Successfully loaded data from {os.path.basename(parquet_path)}")
         except Exception as e:
             st.error(f"Error loading data: {str(e)}")
 
@@ -91,6 +100,9 @@ def render_currency_setup():
 # Main execution flow
 if __name__ == "__main__":
     if not is_data_loaded():
+        # Show loading screen
+        show_loading_screen()
+        
         # Auto-load data on first run
         auto_load_data()
         
