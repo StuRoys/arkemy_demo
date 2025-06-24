@@ -110,7 +110,7 @@ def auto_load_data():
 def render_currency_setup():
     """Render error message if currency couldn't be auto-detected"""
     st.title('Arkemy: Turn Your Project Data Into Gold 🥇')
-    st.markdown("##### v1.3.1 Parquet")
+    st.markdown("##### v1.3.5 Parquet (DEMO)")
     
     st.error("Currency could not be detected from filename.")
     st.markdown("Please name your file like: `data_NOK.parquet` or `data_USD.parquet`")
